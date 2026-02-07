@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downtime Bot | Smart Monitoring & Alert System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --gray-color: #8d99ae;
+            --success-color: #4ade80;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .cta-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 100px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .hero-text h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--gray-color);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-image {
+            position: relative;
+            text-align: center;
+        }
+
+        .bot-illustration {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transform: perspective(1000px) rotateY(-10deg);
+            transition: var(--transition);
+        }
+
+        .bot-illustration:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .section-title p {
+            color: var(--gray-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .feature-card p {
+            color: var(--gray-color);
+        }
+
+        /* Early Access Form */
+        .early-access {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .early-access h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .early-access p {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .access-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            width: 100%;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background-color: var(--light-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background-color: var(--success-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .success-message i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text p {
+                margin: 0 auto 30px;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .access-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>Downtime Bot</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <a href="#early-access" class="cta-button">Request Early Access</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Never Miss Critical <span>Downtime</span> Again</h1>
+                <p>Downtime Bot is an intelligent monitoring system that alerts you instantly when your services go down, so you can fix issues before your users notice.</p>
+                <a href="#early-access" class="cta-button" style="padding: 15px 30px; font-size: 1.1rem;">
+                    <i class="fas fa-rocket"></i> Join Early Access
+                </a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Downtime Bot Dashboard" class="bot-illustration">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Monitoring Features</h2>
+                <p>Downtime Bot offers a comprehensive suite of monitoring tools to keep your services running smoothly 24/7.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Instant Alerts</h3>
+                    <p>Get notified immediately via SMS, email, Slack, or Discord when your service goes down or experiences performance issues.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Performance Analytics</h3>
+                    <p>Track uptime, response times, and performance trends with detailed analytics and custom reports.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-Powered Detection</h3>
+                    <p>Our AI engine learns your service patterns to reduce false positives and detect anomalies before they become problems.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Multi-Region Checks</h3>
+                    <p>Monitor your services from multiple global locations to ensure consistent availability for all your users.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>API Integration</h3>
+                    <p>Seamlessly integrate with your existing workflow tools via our comprehensive REST API and webhooks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Team Collaboration</h3>
+                    <p>Assign incidents, track response times, and collaborate with your team to resolve issues faster.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Early Access Form -->
+    <section class="early-access" id="early-access">
+        <div class="container">
+            <h2>Request Early Access</h2>
+            <p>Be among the first to experience Downtime Bot's powerful monitoring capabilities. Fill out the form below to join our early access program.</p>
+            
+            <div class="access-form">
+                <form id="early-access-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Work Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your work email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="company">Company Name</label>
+                        <input type="text" id="company" name="company" placeholder="Enter your company name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="website">Website URL</label>
+                        <input type="url" id="website" name="website" placeholder="https://yourwebsite.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Your Role</label>
+                        <select id="role" name="role" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="developer">Developer</option>
+                            <option value="devops">DevOps Engineer</option>
+                            <option value="sysadmin">System Administrator</option>
+                            <option value="cto">CTO / Technical Lead</option>
+                            <option value="manager">IT Manager</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="services">Number of Services to Monitor</label>
+                        <select id="services" name="services" required>
+                            <option value="" disabled selected>Select number of services</option>
+                            <option value="1-5">1-5 services</option>
+                            <option value="6-20">6-20 services</option>
+                            <option value="21-50">21-50 services</option>
+                            <option value="51+">51+ services</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Additional Information (Optional)</label>
+                        <textarea id="message" name="message" placeholder="Tell us about your monitoring needs, or any specific features you're interested in..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-paper-plane"></i> Submit Early Access Request
+                    </button>
+                </form>
+                
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Request Submitted Successfully!</h3>
+                    <p>Thank you for your interest in Downtime Bot. We'll contact you within 48 hours with early access details.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Downtime Bot</h3>
+                    <p>Intelligent monitoring and alerting for modern digital services. Never miss critical downtime again.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#early-access">Early Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                        <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Downtime Bot. All rights reserved. | <a href="#" style="color: rgba(255, 255, 255, 0.7);">Privacy Policy</a> | <a href="#" style="color: rgba(255, 255, 255, 0.7);">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form submission handling
+        document.getElementById('early-access-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const role = document.getElementById('role').value;
+            
+            // In a real application, you would send this data to a server
+            // For this demo, we'll just show a success message
+            console.log('Early Access Request Submitted:', {
+                name, email, company, role
+            });
+            
+            // Hide the form and show success message
+            document.getElementById('early-access-form').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            
+            // You could also send the data to a server here using fetch API
+            // Example:
+            // fetch('/api/early-access', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         name, email, company, role
+            //     })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log('Success:', data);
+            //     document.getElementById('early-access-form').style.display = 'none';
+            //     document.getElementById('success-message').style.display = 'block';
+            // })
+            // .catch((error) => {
+            //     console.error('Error:', error);
+            //     alert('There was an error submitting your request. Please try again.');
+            // });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
